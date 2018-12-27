@@ -3,6 +3,7 @@
 import PhonesService from './services/phones-service.js';
 import PhonesCatalogue from './components/phones-catalog.js';
 import Search from './components/search.js';
+import Sorting from './components/sorting.js';
 
 export default class PhonesPage {
   constructor({ element }) {
@@ -69,6 +70,35 @@ export default class PhonesPage {
 
         this._element.children[0].innerHTML = allHTMLforInsert;
       };
+    });
+        
+    this._sorting = new Sorting({
+      element: this._element.querySelector('[data-component="sorting"]')
+    });
+
+    this._sorting.on('sorting', (event) => {
+      let typeSorting = event.detail;
+      let phones = this._phones;
+      
+      if (typeSorting === 'name') {
+        phones.sort(sortName);
+      } else {
+        phones.sort(sortAge);
+      }
+
+      this._catalogue = new PhonesCatalogue({
+        element: this._element.querySelector('[data-component="phones-catalog"]'),
+        phones: phones
+      })
+
+      function sortName(phoneA, phoneB) {
+        if (phoneA.name.toLowerCase() > phoneB.name.toLowerCase()) return 1;
+        if (phoneA.name.toLowerCase() < phoneB.name.toLowerCase()) return -1;
+      }
+
+      function sortAge(phoneA, phoneB) {
+        return phoneA.age - phoneB.age;
+      }
     });
   }
 }
