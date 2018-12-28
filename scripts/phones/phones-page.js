@@ -9,10 +9,11 @@ export default class PhonesPage {
   constructor({ element }) {
     this._element = element;
     this._phones = PhonesService.getPhones();
+    this._phonesFilter = null;
 
     this._catalogue = new PhonesCatalogue({
       element: this._element.querySelector('[data-component="phones-catalog"]'),
-      phones: PhonesService.getPhones(),
+      phones: this._phones,
     });
 
     this._search = new Search({
@@ -21,55 +22,59 @@ export default class PhonesPage {
 
     this._search.on('search', (event) => {
       let searchQuery = event.detail.toLowerCase();
-      let phones = this._phones.filter((phone) => {
-        let strForSearch = phone.name + phone.snippet;
-        return strForSearch.toLowerCase().includes(searchQuery);
-      })
 
+      this._phonesFilter = [];
+
+      for (let i = 0; i < this._phones.length; ++i) {
+        this._phonesFilter[i] = Object.assign({}, this._phones[i])
+      }
+
+      this._phonesFilter = this._phonesFilter.filter(function (phone) {
+        return phone.name.toLowerCase().includes(searchQuery) || phone.snippet.toLowerCase().includes(searchQuery);
+      })
+      
+      this._phonesFilter = this._phonesFilter.map((phone) => {
+        if (phone.name.toLowerCase().includes(searchQuery)) {
+          phone.nameHTML = selectionSearchResults(phone.name);
+        }
+
+        if (phone.snippet.toLowerCase().includes(searchQuery)) {
+          phone.snippet = selectionSearchResults(phone.snippet);
+        }
+        return phone;
+      });
+      
       this._catalogue = new PhonesCatalogue({
         element: this._element.querySelector('[data-component="phones-catalog"]'),
-        phones: phones
+        phones: this._phonesFilter
       })
 
-      selectionSearchResults.call(this._catalogue);
+      this._sorting.eventStart();
 
-      function selectionSearchResults() {
-        let allHTMLforSearch = this._element.children[0].innerHTML.toLowerCase().trim();
-        let allHTMLforInsert = this._element.children[0].innerHTML.trim();
+      function selectionSearchResults(value) {
+        let strForSearch = value.toLowerCase();
         
-        outer: for (let i = 0; i < allHTMLforSearch.length; ++i) {
-          
-          if (allHTMLforSearch[i] === '<') {
-            i = allHTMLforSearch.indexOf('>', i);
-            continue outer;
-          };
-
-          if (allHTMLforSearch[i] === searchQuery[0]) {
+        outer: for (let i = 0; i < strForSearch.length; ++i) {
+          if (strForSearch[i] === searchQuery[0]) {
             let a = i;
             let b = 0;
             for (; b < searchQuery.length;) {
-              if (allHTMLforSearch[a] === searchQuery[b]) {
-                ++a;
-                ++b;
-              }
-              else {
-                i = a;
-                continue outer;
-              }
+              if (strForSearch[a] === searchQuery[b]) ++a, ++b;
+              else continue outer;
             }
 
-            let newPartValue = '<span class="matches">' + allHTMLforInsert.slice(i, i + searchQuery.length) + '</span>';
+            let newPartValue = '<span class="matches">' + value.slice(i, i + searchQuery.length) + '</span>';
 
-            allHTMLforSearch = allHTMLforSearch.slice(0, i) + newPartValue + allHTMLforSearch.slice(i + searchQuery.length);
+            strForSearch = strForSearch.slice(0, i) + newPartValue + strForSearch.slice(i + searchQuery.length);
 
-            allHTMLforInsert = allHTMLforInsert.slice(0, i) + newPartValue + allHTMLforInsert.slice(i + searchQuery.length);
+            value = value.slice(0, i) + newPartValue + value.slice(i + searchQuery.length);
 
             i += newPartValue.length - 1;
           }
         }
 
-        this._element.children[0].innerHTML = allHTMLforInsert;
-      };
+        return value;
+      }
     });
         
     this._sorting = new Sorting({
@@ -78,7 +83,7 @@ export default class PhonesPage {
 
     this._sorting.on('sorting', (event) => {
       let typeSorting = event.detail;
-      let phones = this._phones;
+      let phones = this._phonesFilter || this._phones;
       
       if (typeSorting === 'name') {
         phones.sort(sortName);

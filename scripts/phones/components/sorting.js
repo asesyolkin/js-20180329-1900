@@ -6,6 +6,7 @@ export default class Sorting{
     this._sorting = this._sorting.bind(this);
 
     this._render();
+    this._elementEvent = this._element.querySelector('[data-component="sorting-select"]');
 
     this._element.addEventListener('change', this._sorting);
   }
@@ -13,7 +14,14 @@ export default class Sorting{
   on(eventName, callback) {
     this._element.addEventListener(eventName, callback);
   }
-
+  
+  eventStart() {
+    let event = new Event('change', {
+      bubbles: true
+    });
+    this._elementEvent.dispatchEvent(event);
+  }
+  
   _sorting(e) {
     let customEvent = new CustomEvent('sorting', {
       detail: e.target.value

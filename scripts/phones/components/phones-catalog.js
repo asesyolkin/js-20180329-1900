@@ -48,7 +48,7 @@ export default class PhonesCatalogue {
                 </a>
                 
                 <a href="#!/phones/${ phone.id }">
-                  ${ phone.name }
+                ${ phone.nameHTML || phone.name }
                 </a>
                 
                 <p>${ phone.snippet }</p>
