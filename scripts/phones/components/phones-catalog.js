@@ -53,6 +53,10 @@ export default class PhonesCatalogue {
                 </a>
                 
                 <p>${ phone.snippet }</p>
+
+                <span class="button_add-to-basket">
+                  <a>Add</a>
+                </span>
               </li> 
             `)
             .join('')

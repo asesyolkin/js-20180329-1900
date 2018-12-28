@@ -1,9 +1,8 @@
 'use strict';
 
 export default class Basket{
-  constructor({ element, listPhones, listPhonesContainer }){
+  constructor({ element, listPhonesContainer }){
     this._element = element;
-    this._listPhones = listPhones;
     this._listPhonesContainer = listPhonesContainer;
     this._addToBasket = this._addToBasket.bind(this);
 
@@ -18,6 +17,8 @@ export default class Basket{
 
   _addToBasket(event) {
     if (!event.target.closest('.button_add-to-basket')) return;
+
+    event.target.onmousedown = () => false;
 
     let listOfGoods = this._element.querySelector('ul');
     let phoneName = event.target.closest('[data-element="phone"]').dataset.phoneName;
@@ -37,17 +38,6 @@ export default class Basket{
       <ul>
         <li>нет товаров</li>
       </ul>
-    `;
-    
-    for (let phone of this._listPhones) {
-      let buttonAddToBasket = document.createElement('span');
-      let linkInButton = document.createElement('a');
-
-      linkInButton.textContent = 'Add';
-      buttonAddToBasket.appendChild(linkInButton);
-      buttonAddToBasket.classList.add('button_add-to-basket');
-
-      phone.appendChild(buttonAddToBasket);
-    }
+    `
   }
 }
