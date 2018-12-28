@@ -4,15 +4,17 @@ import PhonesService from './services/phones-service.js';
 import PhonesCatalogue from './components/phones-catalog.js';
 import Search from './components/search.js';
 import Sorting from './components/sorting.js';
+import Basket from './components/basket.js';
 
 export default class PhonesPage {
   constructor({ element }) {
     this._element = element;
     this._phones = PhonesService.getPhones();
     this._phonesFilter = null;
+    this._phonesCatalog = this._element.querySelector('[data-component="phones-catalog"]');
 
     this._catalogue = new PhonesCatalogue({
-      element: this._element.querySelector('[data-component="phones-catalog"]'),
+      element: this._phonesCatalog,
       phones: this._phones,
     });
 
@@ -45,7 +47,7 @@ export default class PhonesPage {
       });
       
       this._catalogue = new PhonesCatalogue({
-        element: this._element.querySelector('[data-component="phones-catalog"]'),
+        element: this._phonesCatalog,
         phones: this._phonesFilter
       })
 
@@ -92,7 +94,7 @@ export default class PhonesPage {
       }
 
       this._catalogue = new PhonesCatalogue({
-        element: this._element.querySelector('[data-component="phones-catalog"]'),
+        element: this._phonesCatalog,
         phones: phones
       })
 
@@ -105,5 +107,11 @@ export default class PhonesPage {
         return phoneA.age - phoneB.age;
       }
     });
+
+    this._basket = new Basket({
+      element: this._element.querySelector('[data-component="basket"]'),
+      listPhones: this._phonesCatalog.getElementsByTagName('LI'),
+      listPhonesContainer: this._phonesCatalog
+    })
   }
 }

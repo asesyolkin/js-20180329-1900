@@ -39,7 +39,8 @@ export default class PhonesCatalogue {
             .map((phone) => `
               <li class="thumbnail"
                   data-element="phone"
-                  data-phone-id="${ phone.id }">
+                  data-phone-id="${ phone.id }"
+                  data-phone-name="${ phone.name }">
                   
                 <a href="#!/phones/${ phone.id }"
                    class="thumb">
