@@ -113,5 +113,17 @@ export default class PhonesPage {
       listPhones: this._phonesCatalog.getElementsByTagName('LI'),
       listPhonesContainer: this._phonesCatalog
     })
+
+    this._basket.on('search', () => {
+      let filterListPhones = this._phonesCatalog.getElementsByTagName('LI');
+      
+      this._basket.renderButtonAdd(filterListPhones);
+    }, this._element);
+
+    this._basket.on('sorting', () => {
+      let filterListPhones = this._phonesCatalog.getElementsByTagName('LI');
+      
+      this._basket.renderButtonAdd(filterListPhones);
+    }, this._element);
   }
 }

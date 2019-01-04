@@ -11,11 +11,11 @@ export default class Basket{
 
     this._listPhonesContainer.addEventListener('click', this._addToBasket)
   }
-
-  on(eventName, callback) {
-    this._element.addEventListener(eventName, callback);
+  
+  on(eventName, callback, eventContainer = this._element) {
+    eventContainer.addEventListener(eventName, callback);
   }
-
+  
   _addToBasket(event) {
     if (!event.target.closest('.button_add-to-basket')) return;
 
@@ -39,7 +39,11 @@ export default class Basket{
       </ul>
     `;
     
-    for (let phone of this._listPhones) {
+    this.renderButtonAdd(this._listPhones);
+  }
+
+  renderButtonAdd(phones) {
+    for (let phone of phones) {
       let buttonAddToBasket = document.createElement('span');
       let linkInButton = document.createElement('a');
 

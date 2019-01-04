@@ -24,6 +24,7 @@ export default class Sorting{
   
   _sorting(e) {
     let customEvent = new CustomEvent('sorting', {
+      bubbles: true,
       detail: e.target.value
     })
 

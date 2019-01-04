@@ -16,6 +16,7 @@ export default class Search{
 
   _search(e) {
     let customEvent = new CustomEvent('search', {
+      bubbles: true,
       detail: e.target.value
     })
 
