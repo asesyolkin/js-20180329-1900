@@ -1,18 +1,16 @@
 'use strict';
 
-export default class Sorting{
+import Component from '../../component.js';
+
+export default class Sorting extends Component {
   constructor({ element }){
-    this._element = element;
+    super({ element });
     this._sorting = this._sorting.bind(this);
 
     this._render();
     this._elementEvent = this._element.querySelector('[data-component="sorting-select"]');
 
     this._element.addEventListener('change', this._sorting);
-  }
-
-  on(eventName, callback) {
-    this._element.addEventListener(eventName, callback);
   }
   
   eventStart() {
@@ -23,11 +21,7 @@ export default class Sorting{
   }
   
   _sorting(e) {
-    let customEvent = new CustomEvent('sorting', {
-      detail: e.target.value
-    })
-
-    this._element.dispatchEvent(customEvent);
+    this._trigger('sorting', e.target.value);
   }
 
   _render() {

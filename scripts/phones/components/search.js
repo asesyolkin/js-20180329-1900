@@ -1,8 +1,11 @@
 'use strict';
 
-export default class Search{
+import Component from '../../component.js';
+
+export default class Search extends Component {
   constructor({ element }){
-    this._element = element;
+    super({ element });
+
     this._search = this._search.bind(this);
 
     this._render();
@@ -10,16 +13,8 @@ export default class Search{
     this._element.querySelector('[data-component="search-field"]').addEventListener('input', this._search);
   }
 
-  on(eventName, callback) {
-    this._element.addEventListener(eventName, callback);
-  }
-
   _search(e) {
-    let customEvent = new CustomEvent('search', {
-      detail: e.target.value
-    })
-
-    this._element.dispatchEvent(customEvent);
+    this._trigger('search', e.target.value);
   }
 
   _render() {

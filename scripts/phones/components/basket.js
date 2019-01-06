@@ -1,18 +1,17 @@
 'use strict';
 
-export default class Basket{
+import Component from '../../component.js';
+
+export default class Basket extends Component {
   constructor({ element, listPhonesContainer }){
-    this._element = element;
+    super({ element });
+
     this._listPhonesContainer = listPhonesContainer;
     this._addToBasket = this._addToBasket.bind(this);
 
     this._render();
 
     this._listPhonesContainer.addEventListener('click', this._addToBasket)
-  }
-
-  on(eventName, callback) {
-    this._element.addEventListener(eventName, callback);
   }
 
   _addToBasket(event) {
