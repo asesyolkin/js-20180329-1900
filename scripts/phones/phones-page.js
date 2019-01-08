@@ -5,6 +5,7 @@ import PhonesCatalogue from './components/phones-catalog.js';
 import Search from './components/search.js';
 import Sorting from './components/sorting.js';
 import Basket from './components/basket.js';
+import PhoneViewer from './components/phone-viewer.js';
 
 export default class PhonesPage {
   constructor({ element }) {
@@ -16,6 +17,20 @@ export default class PhonesPage {
     this._catalogue = new PhonesCatalogue({
       element: this._phonesCatalog,
       phones: this._phones,
+    });
+
+    this._catalogue.on('phoneSelected', () => {
+      this._viewer.show();
+      this._catalogue.hide();
+    });
+
+    this._viewer = new PhoneViewer({
+      element: this._element.querySelector('[data-component="phone-viewer"]')
+    })
+
+    this._viewer.on('back', () => {
+      this._viewer.hide();
+      this._catalogue.show();
     });
 
     this._search = new Search({

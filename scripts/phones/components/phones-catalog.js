@@ -7,21 +7,19 @@ export default class PhonesCatalogue extends Component {
     super({ element });
     this._phones = phones;
 
-    this._onPhoneClick = this._onPhoneClick.bind(this);
-
     this._render();
 
-    this._element.addEventListener('click', this._onPhoneClick);
+    this._element.addEventListener('click', this._onDetailsTriggerClick.bind(this));
   }
 
-  _onPhoneClick(event) {
-    let phoneElement = event.target.closest('[data-element="phone"]');
+  _onDetailsTriggerClick(event) {
+    let trigger = event.target.closest('[data-element="details-trigger"]');
 
-    if (!phoneElement) {
+    if (!trigger) {
       return;
     }
 
-    this._trigger('phoneSelected', phoneElement.dataset.phoneId)
+    this._trigger('phoneSelected');
   }
 
   _render() {
@@ -37,13 +35,15 @@ export default class PhonesCatalogue extends Component {
                   data-phone-name="${ phone.name }">
                   
                 <a href="#!/phones/${ phone.id }"
-                   class="thumb">
+                  data-element="details-trigger"
+                  class="thumb">
                   <img alt="${ phone.name }"
-                       src="${ phone.imageUrl }">
+                  src="${ phone.imageUrl }">
                 </a>
-                
-                <a href="#!/phones/${ phone.id }">
-                ${ phone.nameHTML || phone.name }
+                  
+                <a href="#!/phones/${ phone.id }"
+                  data-element="details-trigger">
+                  ${ phone.nameHTML || phone.name }
                 </a>
                 
                 <p>${ phone.snippet }</p>
