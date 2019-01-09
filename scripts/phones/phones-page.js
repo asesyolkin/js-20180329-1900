@@ -10,13 +10,18 @@ import PhoneViewer from './components/phone-viewer.js';
 export default class PhonesPage {
   constructor({ element }) {
     this._element = element;
-    this._phones = PhonesService.getPhones();
+    this._phones = [];
     this._phonesFilter = null;
     this._phonesCatalog = this._element.querySelector('[data-component="phones-catalog"]');
 
     this._catalogue = new PhonesCatalogue({
       element: this._phonesCatalog,
       phones: this._phones,
+    });
+
+    PhonesService.loadPhones((phones) => {
+      this._phones = phones;
+      this._catalogue.setPhones(phones);
     });
 
     this._catalogue.on('phoneSelected', () => {
