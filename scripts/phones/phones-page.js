@@ -24,9 +24,13 @@ export default class PhonesPage {
       this._catalogue.setPhones(phones);
     });
 
-    this._catalogue.on('phoneSelected', () => {
-      this._viewer.show();
-      this._catalogue.hide();
+    this._catalogue.on('phoneSelected', (event) => {
+      let phoneId = event.detail;
+
+      PhonesService.loadPhone(phoneId, (phone) => {
+        this._viewer.show(phone);
+        this._catalogue.hide();
+      });
     });
 
     this._viewer = new PhoneViewer({

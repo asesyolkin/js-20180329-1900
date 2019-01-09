@@ -24,7 +24,9 @@ export default class PhonesCatalogue extends Component {
       return;
     }
 
-    this._trigger('phoneSelected');
+    let phoneElement = event.target.closest('[data-element="phone"]');
+
+    this._trigger('phoneSelected', phoneElement.dataset.phoneId);
   }
 
   _render() {
