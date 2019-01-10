@@ -49,34 +49,28 @@ export default class PhonesPage {
     this._search.on('search', (event) => {
       let searchQuery = event.detail.toLowerCase();
 
-      this._phonesFilter = [];
-
-      for (let i = 0; i < this._phones.length; ++i) {
-        this._phonesFilter[i] = Object.assign({}, this._phones[i])
-      }
-
-      this._phonesFilter = this._phonesFilter.filter(function (phone) {
+      PhonesService.loadPhones((phones) => {
+          this._phonesFilter = phones.filter(getFilteredPhones);
+          
+          this._phonesFilter = this._phonesFilter.map((phone) => {
+            if (phone.name.toLowerCase().includes(searchQuery)) {
+              phone.nameHTML = selectionSearchResults(phone.name);
+            }
+            if (phone.snippet.toLowerCase().includes(searchQuery)) {
+              phone.snippet = selectionSearchResults(phone.snippet);
+            }
+            return phone;
+          });
+          
+          this._catalogue.setPhones(this._phonesFilter);
+          
+          this._sorting.eventStart();
+        })
+        
+      function getFilteredPhones(phone) {
         return phone.name.toLowerCase().includes(searchQuery) || phone.snippet.toLowerCase().includes(searchQuery);
-      })
-      
-      this._phonesFilter = this._phonesFilter.map((phone) => {
-        if (phone.name.toLowerCase().includes(searchQuery)) {
-          phone.nameHTML = selectionSearchResults(phone.name);
-        }
-
-        if (phone.snippet.toLowerCase().includes(searchQuery)) {
-          phone.snippet = selectionSearchResults(phone.snippet);
-        }
-        return phone;
-      });
-      
-      this._catalogue = new PhonesCatalogue({
-        element: this._phonesCatalog,
-        phones: this._phonesFilter
-      })
-
-      this._sorting.eventStart();
-
+      }
+        
       function selectionSearchResults(value) {
         let strForSearch = value.toLowerCase();
         
