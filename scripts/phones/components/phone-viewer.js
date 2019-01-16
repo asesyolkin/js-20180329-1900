@@ -8,6 +8,7 @@ export default class PhoneViewer extends Component{
 
     this._element.addEventListener('click', this._onBackButtonClick.bind(this));
     this._element.addEventListener('click', this._onChangeImage.bind(this));
+    this._element.addEventListener('click', this._onAddToBasket.bind(this));
   }
   
   show(phone) {
@@ -40,6 +41,18 @@ export default class PhoneViewer extends Component{
     mainImage.setAttribute('src', this._phone.images[smallImageNumb]);
   }
 
+  _onAddToBasket(event) {
+    let trigger = event.target.closest('[data-element="add-to-basket"]');
+
+    if (!trigger) {
+      return;
+    }
+
+    let phoneName = this._element.querySelector('[data-element="phone-name"]').textContent;
+
+    this._trigger('addToBasket', phoneName);
+  }
+
   _render() {
     let phone = this._phone;
 
@@ -53,9 +66,9 @@ export default class PhoneViewer extends Component{
         >
 
         <button data-element="back-button">Back to list</button>
-        <button>Add to basket</button>
+        <button data-element="add-to-basket">Add to basket</button>
     
-        <h1>${ phone.name }</h1>
+        <h1 data-element="phone-name">${ phone.name }</h1>
     
         <p>${ phone.description }</p>
         

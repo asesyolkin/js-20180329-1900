@@ -33,6 +33,10 @@ export default class PhonesPage {
       });
     });
 
+    this._catalogue.on('addToBasket', (event) => {
+      this._basket.addToBasket(event);
+    });
+
     this._viewer = new PhoneViewer({
       element: this._element.querySelector('[data-component="phone-viewer"]')
     })
@@ -40,6 +44,10 @@ export default class PhonesPage {
     this._viewer.on('back', () => {
       this._viewer.hide();
       this._catalogue.show();
+    });
+
+    this._viewer.on('addToBasket', (event) => {
+      this._basket.addToBasket(event);
     });
 
     this._search = new Search({
@@ -111,10 +119,7 @@ export default class PhonesPage {
         phones.sort(sortAge);
       }
 
-      this._catalogue = new PhonesCatalogue({
-        element: this._phonesCatalog,
-        phones: phones
-      })
+      this._catalogue.setPhones(phones);
 
       function sortName(phoneA, phoneB) {
         if (phoneA.name.toLowerCase() > phoneB.name.toLowerCase()) return 1;
