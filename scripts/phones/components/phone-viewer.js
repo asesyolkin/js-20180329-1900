@@ -7,6 +7,7 @@ export default class PhoneViewer extends Component{
     super({ element });
 
     this._element.addEventListener('click', this._onBackButtonClick.bind(this));
+    this._element.addEventListener('click', this._onChangeImage.bind(this));
   }
   
   show(phone) {
@@ -16,7 +17,7 @@ export default class PhoneViewer extends Component{
     super.show();
   }
 
-  _onBackButtonClick() {
+  _onBackButtonClick(event) {
     let backButton = event.target.closest('[data-element="back-button"]');
 
     if (!backButton) {
@@ -26,6 +27,19 @@ export default class PhoneViewer extends Component{
     this._trigger('back');
   }
 
+  _onChangeImage(event) {
+    let smallImage = event.target.closest('[data-element_small-image-numb]');
+
+    if (!smallImage) {
+      return;
+    }
+
+    let mainImage = this._element.querySelector('[data-element="main-image"]');
+    let smallImageNumb = +smallImage.dataset.element_smallImageNumb;
+
+    mainImage.setAttribute('src', this._phone.images[smallImageNumb]);
+  }
+
   _render() {
     let phone = this._phone;
 
@@ -33,7 +47,10 @@ export default class PhoneViewer extends Component{
       <h2>Phone details</h2>
 
       <div>
-        <img class="phone" src="${ phone.images[0] }">
+        <img class="phone" 
+          data-element="main-image"
+          src="${ phone.images[0] }"
+        >
 
         <button data-element="back-button">Back to list</button>
         <button>Add to basket</button>
@@ -43,9 +60,12 @@ export default class PhoneViewer extends Component{
         <p>${ phone.description }</p>
         
         <ul class="phone-thumbs">
-          ${phone.images.map((imageUrl) => `
+          ${phone.images.map((imageUrl, imageNumb) => `
             <li>
-              <img src="${ imageUrl }">
+              <img 
+                data-element_small-image-numb=" ${ imageNumb } "
+                src="${ imageUrl }"
+              >
             </li>
           `).join('')}
         </ul>
