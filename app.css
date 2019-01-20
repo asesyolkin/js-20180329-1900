@@ -130,3 +130,22 @@ h1 {
 .button_add-to-basket:active {
   background-color: rgb(20, 101, 250);
 }
+
+.product {
+  position: relative;
+  width: 92px;
+}
+
+[data-element="remove-button"] {
+  position: absolute;
+  top: 32%;
+  left: 101%;
+  border: 1px solid;
+  border-radius: 6px;
+  background-color: #f1bfbf;
+  width: 13px;
+  height: 13px;
+  font-size: 70%;
+  text-align: center;
+  cursor: pointer;
+}
