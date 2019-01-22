@@ -7,9 +7,15 @@ export default class PhonesCatalogue extends Component {
     super({ element });
     this._phones = phones;
 
-    this._render();
+    if (this._phones) this._render();
 
     this._element.addEventListener('click', this._onDetailsTriggerClick.bind(this));
+    this._element.addEventListener('click', this._onAddToBasket.bind(this));
+  }
+
+  setPhones(phones) {
+    this._phones = phones;
+    this._render();
   }
 
   _onDetailsTriggerClick(event) {
@@ -19,7 +25,21 @@ export default class PhonesCatalogue extends Component {
       return;
     }
 
-    this._trigger('phoneSelected');
+    let phoneElement = event.target.closest('[data-element="phone"]');
+
+    this._trigger('phoneSelected', phoneElement.dataset.phoneId);
+  }
+
+  _onAddToBasket(event) {
+    let trigger = event.target.closest('[data-element="add-to-basket"]');
+
+    if (!trigger) {
+      return;
+    }
+
+    let phoneName = trigger.closest('[data-element="phone"]').dataset.phoneName;
+
+    this._trigger('addToBasket', phoneName);
   }
 
   _render() {
@@ -48,9 +68,10 @@ export default class PhonesCatalogue extends Component {
                 
                 <p>${ phone.snippet }</p>
 
-                <span class="button_add-to-basket">
-                  <a>Add</a>
-                </span>
+                <button class="button_add-to-basket"
+                  data-element="add-to-basket">
+                  Add
+                </button>
               </li> 
             `)
             .join('')

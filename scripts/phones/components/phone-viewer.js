@@ -7,14 +7,18 @@ export default class PhoneViewer extends Component{
     super({ element });
 
     this._element.addEventListener('click', this._onBackButtonClick.bind(this));
+    this._element.addEventListener('click', this._onChangeImage.bind(this));
+    this._element.addEventListener('click', this._onAddToBasket.bind(this));
   }
   
-  show() {
+  show(phone) {
+    this._phone = phone;
     this._render();
+
     super.show();
   }
 
-  _onBackButtonClick() {
+  _onBackButtonClick(event) {
     let backButton = event.target.closest('[data-element="back-button"]');
 
     if (!backButton) {
@@ -24,136 +28,59 @@ export default class PhoneViewer extends Component{
     this._trigger('back');
   }
 
+  _onChangeImage(event) {
+    let smallImage = event.target.closest('[data-element_small-image-numb]');
+
+    if (!smallImage) {
+      return;
+    }
+
+    let mainImage = this._element.querySelector('[data-element="main-image"]');
+    let smallImageNumb = +smallImage.dataset.element_smallImageNumb;
+
+    mainImage.setAttribute('src', this._phone.images[smallImageNumb]);
+  }
+
+  _onAddToBasket(event) {
+    let trigger = event.target.closest('[data-element="add-to-basket"]');
+
+    if (!trigger) {
+      return;
+    }
+
+    let phoneName = this._element.querySelector('[data-element="phone-name"]').textContent;
+
+    this._trigger('addToBasket', phoneName);
+  }
+
   _render() {
+    let phone = this._phone;
+
     this._element.innerHTML = `
+      <h2>Phone details</h2>
+
       <div>
-        <img class="phone" src="img/phones/motorola-xoom-with-wi-fi.0.jpg">
+        <img class="phone" 
+          data-element="main-image"
+          src="${ phone.images[0] }"
+        >
+
         <button data-element="back-button">Back to list</button>
-        <button>Add to basket</button>
-        <h1>Motorola XOOM™ with Wi-Fi</h1>
-        <p>Motorola XOOM with Wi-Fi has a super-powerful dual-core processor and Android™ 3.0 (Honeycomb) — the Android platform designed specifically for tablets. With its 10.1-inch HD widescreen display, you’ll enjoy HD video in a thin, light, powerful and upgradeable tablet.</p>
+        <button data-element="add-to-basket">Add to basket</button>
+    
+        <h1 data-element="phone-name">${ phone.name }</h1>
+    
+        <p>${ phone.description }</p>
+        
         <ul class="phone-thumbs">
-          <li>
-            <img src="img/phones/motorola-xoom-with-wi-fi.0.jpg">
-          </li>
-          <li>
-            <img src="img/phones/motorola-xoom-with-wi-fi.1.jpg">
-          </li>
-          <li>
-            <img src="img/phones/motorola-xoom-with-wi-fi.2.jpg">
-          </li>
-          <li>
-            <img src="img/phones/motorola-xoom-with-wi-fi.3.jpg">
-          </li>
-          <li>
-            <img src="img/phones/motorola-xoom-with-wi-fi.4.jpg">
-          </li>
-          <li>
-            <img src="img/phones/motorola-xoom-with-wi-fi.5.jpg">
-          </li>
-        </ul>
-        <ul class="specs">
-          <li>
-            <span>Availability and Networks</span>
-            <dl>
-              <dt>Availability</dt>
-              <dd></dd>
-            </dl>
-          </li>
-          <li>
-            <span>Battery</span>
-            <dl>
-              <dt>Type</dt>
-              <dd>Other ( mAH)</dd>
-              <dt>Talk Time</dt>
-              <dd>24 hours</dd>
-              <dt>Standby time (max)</dt>
-              <dd>336 hours</dd>
-            </dl>
-          </li>
-          <li>
-            <span>Storage and Memory</span>
-            <dl>
-              <dt>RAM</dt>
-              <dd>1000MB</dd>
-              <dt>Internal Storage</dt>
-              <dd>32000MB</dd>
-            </dl>
-          </li>
-          <li>
-            <span>Connectivity</span>
-            <dl>
-              <dt>Network Support</dt>
-              <dd></dd>
-              <dt>WiFi</dt>
-              <dd>802.11 b/g/n</dd>
-              <dt>Bluetooth</dt>
-              <dd>Bluetooth 2.1</dd>
-              <dt>Infrared</dt>
-              <dd>✘</dd>
-              <dt>GPS</dt>
-              <dd>✓</dd>
-            </dl>
-          </li>
-          <li>
-            <span>Android</span>
-            <dl>
-              <dt>OS Version</dt>
-              <dd>Android 3.0</dd>
-              <dt>UI</dt>
-              <dd>Honeycomb</dd>
-            </dl>
-          </li>
-          <li>
-            <span>Size and Weight</span>
-            <dl>
-              <dt>Dimensions</dt>
-              <dd>249.1 mm (w)</dd>
-              <dd>167.8 mm (h)</dd>
-              <dd>12.9 mm (d)</dd>
-              <dt>Weight</dt>
-              <dd>708.0 grams</dd>
-            </dl>
-          </li>
-          <li>
-            <span>Display</span>
-            <dl>
-              <dt>Screen size</dt>
-              <dd>10.1 inches</dd>
-              <dt>Screen resolution</dt>
-              <dd>WXGA (1200 x 800)</dd>
-              <dt>Touch screen</dt>
-              <dd>✓</dd>
-            </dl>
-          </li>
-          <li>
-            <span>Hardware</span>
-            <dl>
-              <dt>CPU</dt>
-              <dd>1 GHz Dual Core Tegra 2</dd>
-              <dt>USB</dt>
-              <dd>USB 2.0</dd>
-              <dt>Audio / headphone jack</dt>
-              <dd>3.5mm</dd>
-              <dt>FM Radio</dt>
-              <dd>✘</dd>
-              <dt>Accelerometer</dt>
-              <dd>✓</dd>
-            </dl>
-          </li>
-          <li>
-            <span>Camera</span>
-            <dl>
-              <dt>Primary</dt>
-              <dd>5.0 megapixels</dd>
-              <dt>Features</dt>
-              <dd>Flash, Video</dd>
-            </dl>
-          </li>
-          <li>
-            <span>Additional Features</span>
-            <dd>Sensors: proximity, ambient light, barometer, gyroscope</dd>
-          </li>
+          ${phone.images.map((imageUrl, imageNumb) => `
+            <li>
+              <img 
+                data-element_small-image-numb=" ${ imageNumb } "
+                src="${ imageUrl }"
+              >
+            </li>
+          `).join('')}
         </ul>
       </div>
     `;
